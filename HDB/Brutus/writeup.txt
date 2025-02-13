@@ -1,0 +1,4 @@
+--> zip2john Brutus.zip > hash.txt
+Password: hacktheblue
+
+
